@@ -1,0 +1,3 @@
+---
+- include: kernel_archlinux.yml
+  when: ansible_lsb.id == "Archlinux"

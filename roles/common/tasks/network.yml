@@ -1,0 +1,221 @@
+---
+- name: configure arp options in linux kernel
+  tags:
+    - install
+    - network
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+  with_items:
+    - { name: net.ipv4.conf.all.arp_ignore, value: 1 }
+    - { name: net.ipv4.conf.default.arp_ignore, value: 1 }
+    - { name: net.ipv4.conf.all.arp_announce, value: 2 }
+    - { name: net.ipv4.conf.default.arp_announce, value: 2 }
+
+- name: enable icmp options in linux kernel
+  tags:
+    - install
+    - network
+  sysctl:
+    name: "{{ item }}"
+    value: "1"
+    state: present
+  with_items:
+    - net.ipv4.icmp_echo_ignore_broadcasts
+    - net.ipv4.icmp_ignore_bogus_error_responses
+
+- name: configure icmp options in linux kernel
+  tags:
+    - install
+    - network
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+  with_items:
+    - { name: net.ipv4.icmp_ratelimit, value: 20 }
+    - { name: net.ipv4.icmp_ratemask, value: 88089 }
+
+- name: enable tcp options in linux kernel
+  tags:
+    - install
+    - network
+  sysctl:
+    name: "{{ item }}"
+    value: "1"
+    state: present
+  with_items:
+    - net.ipv4.tcp_timestamps
+    - net.ipv4.tcp_window_scaling
+    - net.ipv4.tcp_mtu_probing
+    - net.ipv4.tcp_syncookies
+    - net.ipv4.conf.all.log_martians
+    - net.ipv4.conf.default.log_martians
+    - net.ipv4.conf.all.rp_filter
+    - net.ipv4.conf.default.rp_filter
+    - net.ipv4.tcp_rfc1337
+
+- name: disable tcp options in linux kernel
+  tags:
+    - install
+    - network
+  sysctl:
+    name: "{{ item }}"
+    value: "0"
+    state: present
+  with_items:
+    - net.ipv4.tcp_sack
+    - net.ipv4.conf.all.accept_source_route
+    - net.ipv4.conf.default.accept_source_route
+    - net.ipv4.conf.all.accept_redirects
+    - net.ipv4.conf.default.accept_redirects
+    - net.ipv4.conf.all.secure_redirects
+    - net.ipv4.conf.default.secure_redirects
+    - net.ipv4.conf.all.send_redirects
+    - net.ipv4.conf.default.send_redirects
+
+- name: increase tcp window size in linux kernel
+  tags:
+    - install
+    - network
+  sysctl:
+    name: "{{ item }}"
+    value: "10240 87380 33554432"
+    state: present
+  with_items:
+    - net.ipv4.tcp_rmem
+    - net.ipv4.tcp_wmem
+
+- name: increase tcp buffer in linux kernel
+  tags:
+    - install
+    - network
+  sysctl:
+    name: "{{ item }}"
+    value: "67108864"
+    state: present
+  with_items:
+    - net.core.rmem_max
+    - net.core.wmem_max
+
+- name: increase tcp incomming connections in linux kernel
+  tags:
+    - install
+    - network
+  sysctl:
+    name: "net.core.somaxconn"
+    value: "65536"
+    state: present
+
+- name: increase tcp backlog in linux kernel
+  tags:
+    - install
+    - network
+  sysctl:
+    name: "net.core.netdev_max_backlog"
+    value: "30000"
+    state: present
+
+- name: configure tcp keepalive in linux kernel
+  tags:
+    - install
+    - network
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+  with_items:
+    - { name: net.ipv4.tcp_fin_timeout, value: 15 }
+    - { name: net.ipv4.tcp_keepalive_time, value: 360 }
+    - { name: net.ipv4.tcp_keepalive_intvl, value: 30 }
+    - { name: net.ipv4.tcp_keepalive_probes, value: 3 }
+
+- name: configure tcp handshake in linux kernel
+  tags:
+    - install
+    - network
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+  with_items:
+    - { name: net.ipv4.tcp_synack_retries, value: 3 }
+    - { name: net.ipv4.tcp_syn_retries, value: 3 }
+    - { name: net.ipv4.tcp_max_syn_backlog, value: 4096 }
+
+- name: increase tcp local port range in linux kernel
+  tags:
+    - install
+    - network
+  sysctl:
+    name: "net.ipv4.ip_local_port_range"
+    value: "1024 65535"
+    state: present
+
+- name: disable ipv6 options in linux kernel
+  tags:
+    - install
+    - network
+  sysctl:
+    name: "{{ item }}"
+    value: "0"
+    state: present
+  with_items:
+    - net.ipv6.conf.default.router_solicitations
+    - net.ipv6.conf.all.router_solicitations
+    - net.ipv6.conf.default.accept_ra_rtr_pref
+    - net.ipv6.conf.all.accept_ra_rtr_pref
+    - net.ipv6.conf.default.accept_ra_pinfo
+    - net.ipv6.conf.all.accept_ra_pinfo
+    - net.ipv6.conf.default.accept_ra_defrtr
+    - net.ipv6.conf.all.accept_ra_defrtr
+    - net.ipv6.conf.default.autoconf
+    - net.ipv6.conf.all.autoconf
+    - net.ipv6.conf.default.dad_transmits
+    - net.ipv6.conf.all.dad_transmits
+    - net.ipv6.conf.all.accept_ra
+    - net.ipv6.conf.default.accept_ra
+    - net.ipv6.conf.all.accept_redirects
+    - net.ipv6.conf.default.accept_redirects
+    - net.ipv6.conf.all.accept_source_route
+    - net.ipv6.conf.default.accept_source_route
+
+- name: configure only one ipv6 unicast address in linux kernel
+  tags:
+    - install
+    - network
+  sysctl:
+    name: "{{ item }}"
+    value: "1"
+    state: present
+  with_items:
+    - net.ipv6.conf.default.max_addresses
+    - net.ipv6.conf.all.max_addresses
+  when: net_ipv6_limit_one is defined
+
+- name: disable ipv6 in linux kernel
+  tags:
+    - install
+    - network
+  sysctl:
+    name: "{{ item }}"
+    value: "1"
+    state: present
+  with_items:
+    - net.ipv6.conf.all.disable_ipv6
+    - net.ipv6.conf.default.disable_ipv6
+    - net.ipv6.conf.lo.disable_ipv6
+    - net.ipv6.conf.eth0.disable_ipv6
+  when: net_ipv6_disable is defined
+
+- name: prevent ip spoofing and dns poisoning
+  tags:
+    - install
+    - network
+  copy:
+    src: host.conf
+    dest: /etc/host.conf
+    owner: root
+    group: root
+    mode: 0644

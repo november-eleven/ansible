@@ -1,0 +1,14 @@
+---
+- name: add authorized ssh key for root
+  tags:
+    - install
+    - update
+    - user
+    - ssh
+  template:
+    src: root-ssh-keys.j2
+    dest: "/root/{{ ssh_authorized_keys_path }}"
+    owner: root
+    group: root
+    mode: 0600
+  when: ssh_root_keys is defined

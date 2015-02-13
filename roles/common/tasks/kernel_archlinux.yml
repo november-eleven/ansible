@@ -1,0 +1,29 @@
+---
+- name: install linux-grsecurity kernel
+  tags:
+    - install
+    - packages
+    - kernel
+  pacman:
+    name: "paxd,linux-grsec"
+    state: present
+  register: kernel_install
+
+- name: remove linux and/or linux-lts kernel
+  tags:
+    - install
+    - packages
+    - kernel
+  pacman:
+    name: "linux,linux-lts"
+    state: absent
+  register: kernel_remove
+
+- name: generate grub configuration
+  tags:
+    - install
+    - packages
+    - kernel
+  shell: grub-mkconfig -o /boot/grub/grub.cfg
+  when: kernel_install|changed or kernel_remove|changed
+  notify: reboot

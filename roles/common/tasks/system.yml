@@ -1,0 +1,139 @@
+---
+- name: update /bin/su ownership
+  tags:
+    - install
+    - system
+  file:
+    path: /bin/su
+    owner: root
+    group: root
+    mode: 0750
+
+- name: update /etc/passwd ownership
+  tags:
+    - install
+    - system
+  file:
+    path: /etc/passwd
+    owner: root
+    group: root
+    mode: 0644
+
+- name: update /etc/group ownership
+  tags:
+    - install
+    - system
+  file:
+    path: /etc/group
+    owner: root
+    group: root
+    mode: 0644
+
+- name: update /etc/shadow ownership
+  tags:
+    - install
+    - system
+  file:
+    path: /etc/shadow
+    owner: root
+    group: root
+    mode: 0600
+
+- name: update /etc/gshadow ownership
+  tags:
+    - install
+    - system
+  file:
+    path: /etc/gshadow
+    owner: root
+    group: root
+    mode: 0600
+
+- name: update /etc/sysctl.conf ownership
+  tags:
+    - install
+    - system
+  file:
+    path: /etc/sysctl.conf
+    owner: root
+    group: root
+    mode: 0640
+
+- name: restrict allowed system console
+  tags:
+    - install
+    - system
+  copy:
+    src: securetty
+    dest: /etc/securetty
+    owner: root
+    group: root
+    mode: 0644
+
+- name: enable virtual memory space randomization protection in linux kernel
+  tags:
+    - install
+    - system
+  sysctl:
+    name: "kernel.randomize_va_space"
+    value: "2"
+    state: present
+
+- name: disable magic-sysrq key in linux kernel
+  tags:
+    - install
+    - system
+  sysctl:
+    name: "kernel.sysrq"
+    value: "0"
+    state: present
+
+- name: increase pid range limit in linux kernel
+  tags:
+    - install
+    - system
+  sysctl:
+    name: "kernel.pid_max"
+    value: "65536"
+    state: present
+
+- name: increase system file descriptor limit in linux kernel
+  tags:
+    - install
+    - system
+  sysctl:
+    name: "fs.file-max"
+    value: "10000000"
+    state: present
+
+- name: configure memory options in linux kernel
+  tags:
+    - install
+    - system
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+  with_items:
+    - { name: vm.laptop_mode, value: 0 }
+    - { name: vm.swappiness, value: 10 }
+    - { name: vm.dirty_background_bytes, value: 4194304 }
+    - { name: vm.dirty_bytes, value: 33554432 }
+    - { name: vm.dirty_expire_centisecs, value: 400 }
+    - { name: vm.dirty_writeback_centisecs, value: 500 }
+    - { name: vm.vfs_cache_pressure, value: 400 }
+
+- name: disable core dump in linux kernel via sysctl
+  tags:
+    - install
+    - system
+  sysctl:
+    name: "fs.suid_dumpable"
+    value: "0"
+    state: present
+
+- include: system_debian.yml
+  when: ansible_lsb.id == "Debian"
+
+- include: system_archlinux.yml
+  when: ansible_lsb.id == "Archlinux"

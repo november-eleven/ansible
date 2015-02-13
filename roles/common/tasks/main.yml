@@ -1,0 +1,6 @@
+---
+- include: network.yml
+- include: packages.yml
+- include: ssh.yml
+- include: system.yml
+- include: kernel.yml

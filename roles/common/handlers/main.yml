@@ -1,0 +1,16 @@
+---
+- name: restart sshd
+  service:
+    name: sshd
+    state: restarted
+  when: ansible_lsb.id == "Archlinux"
+
+- name: restart sshd
+  service:
+    name: ssh
+    state: restarted
+  when: ansible_lsb.id == "Debian"
+
+- name: reboot
+  debug:
+    msg: "*** reboot required ***"

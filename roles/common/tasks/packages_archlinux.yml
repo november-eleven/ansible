@@ -1,0 +1,42 @@
+---
+- name: update pacman cache
+  tags:
+    - install
+    - update
+    - packages
+  pacman:
+    update_cache: yes
+
+- name: install common needed packages
+  tags:
+    - install
+    - packages
+  pacman:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - wget
+    - curl
+    - rsync
+    - htop
+    - openssh
+    - openssl
+    - python2
+
+- name: remove unrequired packages
+  tags:
+    - install
+    - packages
+  pacman:
+    name: "{{ item }}"
+    state: absent
+    recurse: yes
+  with_items:
+    - bc
+    - man-pages-de
+    - man-pages-it
+    - bind 
+    - screen
+    - btrfs-progs
+    - jfsutils
+    - reiserfsprogs

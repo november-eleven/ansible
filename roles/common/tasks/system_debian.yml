@@ -1,0 +1,11 @@
+---
+- name: disable core dump in linux kernel via limits for Debian
+  tags:
+    - install
+    - system
+  copy:
+    src: limits-hardcore.conf
+    dest: /etc/security/limits.d/10-hardcore.conf
+    owner: root
+    group: root
+    mode: 0600

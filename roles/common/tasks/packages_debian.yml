@@ -1,0 +1,106 @@
+---
+- name: update apt cache
+  tags:
+    - install
+    - update
+    - packages
+  apt:
+    update_cache: yes
+    cache_valid_time: 86400
+
+- name: install common needed packages
+  tags:
+    - install
+    - packages
+  apt:
+    pkg: "{{ item }}"
+    state: present
+  with_items:
+    - wget
+    - curl
+    - mlocate
+    - rsync
+    - htop
+    - openssh-server
+    - openssh-client
+    - openssl
+    - python2.7
+    - cron-apt
+
+- name: remove unrequired packages
+  tags:
+    - install
+    - packages
+  apt:
+    pkg: "{{ item }}"
+    purge: yes
+    state: absent
+  with_items:
+    - eject
+  register: remove_packages
+
+- name: autoremove packages
+  tags:
+    - install
+    - packages
+  command: apt-get autoremove --purge -y
+  when: remove_packages|changed
+
+- name: create debian security repository list
+  tags:
+    - install
+    - packages
+  shell: grep security /etc/apt/sources.list > /etc/apt/security.sources.list
+  args:
+    creates: /etc/apt/security.sources.list
+
+- name: write cron-apt security's action.d configuration file
+  tags:
+    - install
+    - packages
+  copy:
+    src: cron-apt/security-action
+    dest: /etc/cron-apt/action.d/5-security
+    owner: root
+    group: root
+    mode: 0644
+
+- name: write cron-apt security's config.d configuration file
+  tags:
+    - install
+    - packages
+  copy:
+    src: cron-apt/security-config
+    dest: /etc/cron-apt/config.d/5-security
+    owner: root
+    group: root
+    mode: 0644
+
+- name: write cron-apt general configuration file
+  tags:
+    - install
+    - packages
+  copy:
+    src: cron-apt/config
+    dest: /etc/cron-apt/config
+    owner: root
+    group: root
+    mode: 0644
+
+- name: remove cron-apt cron file from package
+  tags:
+    - install
+    - packages
+  file:
+    path: /etc/cron.d/cron-apt
+    state: absent
+
+- name: create cron-apt cron entry
+  tags:
+    - install
+    - packages
+  cron:
+    name: "check package upgrade"
+    minute: "*/5"
+    job: "test -x /usr/sbin/cron-apt && /usr/sbin/cron-apt"
+  notify: restart cron

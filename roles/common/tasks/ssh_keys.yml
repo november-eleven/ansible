@@ -1,0 +1,35 @@
+---
+- name: check rsa keys for sshd
+  tags:
+    - install
+    - update
+    - user
+    - ssh
+  shell: "ssh-keygen -l -f /etc/ssh/ssh_host_rsa_key | cut -f1 -d ' ' | tr -dc '0-9' | xargs /usr/bin/test {{ ssh_rsa_key_size }} -eq"
+  register: ssh_rsa_key_check
+  failed_when: "ssh_rsa_key_check.stderr != '' or ssh_rsa_key_check.stdout != ''"
+  changed_when: "ssh_rsa_key_check.rc != 0"
+
+- name: remove rsa keys for sshd
+  tags:
+    - install
+    - update
+    - user
+    - ssh
+  file:
+    path: "/etc/ssh/{{ item }}"
+    state: absent
+  with_items:
+    - ssh_host_rsa_key
+    - ssh_host_rsa_key.pub
+  when: ssh_rsa_key_check|changed
+
+- name: generate new rsa keys for sshd
+  tags:
+    - install
+    - update
+    - user
+    - ssh
+  shell: "ssh-keygen -q -t rsa -b 16384 -N '' -f /etc/ssh/ssh_host_rsa_key"
+  args:
+    creates: /etc/ssh/ssh_host_rsa_key

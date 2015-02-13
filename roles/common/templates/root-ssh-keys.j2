@@ -1,0 +1,3 @@
+{% for ssh_key in ssh_root_keys %}
+{{ lookup('file', ssh_key) }}
+{% endfor %}

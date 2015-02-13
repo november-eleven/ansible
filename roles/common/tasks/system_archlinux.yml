@@ -1,0 +1,9 @@
+---
+- name: disable core dump in linux kernel via limits for Archlinux
+  tags:
+    - install
+    - system
+  lineinfile:
+    dest: /etc/security/limits.conf
+    regexp: "^\\* hard core 0$"
+    line: "* hard core 0"
