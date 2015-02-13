@@ -1,0 +1,4 @@
+---
+- hosts: ovh
+  roles:
+    - common
