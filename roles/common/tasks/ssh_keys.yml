@@ -30,6 +30,6 @@
     - update
     - user
     - ssh
-  shell: "ssh-keygen -q -t rsa -b 16384 -N '' -f /etc/ssh/ssh_host_rsa_key"
+  shell: "ssh-keygen -q -t rsa -b {{ ssh_rsa_key_size }} -N '' -f /etc/ssh/ssh_host_rsa_key"
   args:
     creates: /etc/ssh/ssh_host_rsa_key
