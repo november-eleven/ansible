@@ -21,3 +21,12 @@
     group: root
     mode: 0644
   notify: restart ntp
+
+- name: enable ntp
+  tags:
+    - install
+    - ntp
+  service:
+    name: ntp
+    enabled: yes
+  notify: restart ntp
