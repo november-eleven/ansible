@@ -1,0 +1,23 @@
+---
+- name: install common needed packages
+  tags:
+    - install
+    - packages
+    - ntp
+  pacman:
+    name: ntp
+    state: present
+
+- name: configure ntp daemon
+  tags:
+    - install
+    - packages
+    - update
+    - ntp
+  copy:
+    src: ntp-archlinux.conf
+    dest: /etc/ntp.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart ntp

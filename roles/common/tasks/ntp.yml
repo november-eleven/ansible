@@ -1,0 +1,6 @@
+---
+- include: ntp_debian.yml
+  when: ansible_lsb.id == "Debian"
+
+- include: ntp_archlinux.yml
+  when: ansible_lsb.id == "Archlinux"

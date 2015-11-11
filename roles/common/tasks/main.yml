@@ -4,3 +4,4 @@
 - include: ssh.yml
 - include: system.yml
 - include: kernel.yml
+- include: ntp.yml

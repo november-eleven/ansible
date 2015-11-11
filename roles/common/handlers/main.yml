@@ -11,6 +11,18 @@
     state: restarted
   when: ansible_lsb.id == "Debian"
 
+- name: restart ntp
+  service:
+    name: ntp
+    state: restarted
+  when: ansible_lsb.id == "Debian"
+
+- name: restart ntp
+  service:
+    name: ntpd
+    state: restarted
+  when: ansible_lsb.id == "Archlinux"
+
 - name: reboot
   debug:
     msg: "*** reboot required ***"
