@@ -1,0 +1,2 @@
+/sbin/iptables -A INPUT -i {{ iptables_default_iface }} -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+/sbin/iptables -A OUTPUT -o {{ iptables_default_iface }} -m conntrack --ctstate NEW,ESTABLISHED,RELATED -j ACCEPT

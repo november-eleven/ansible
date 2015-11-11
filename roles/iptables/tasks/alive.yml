@@ -1,0 +1,11 @@
+---
+- name: write alive configuration
+  tags:
+    - install
+    - iptables
+    - update
+  template:
+    src: alive.conf.j2
+    dest: /etc/iptables.d/alive.conf
+  notify:
+    - restart iptables

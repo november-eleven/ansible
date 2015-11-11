@@ -1,0 +1,45 @@
+---
+- name: write iptables.service file
+  tags:
+    - install
+    - update
+    - iptables
+  copy:
+    src: iptables.service
+    dest: /lib/systemd/system/iptables.service
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - start iptables
+
+- name: write iptables-bootstrap file
+  tags:
+    - install
+    - update
+    - iptables
+  copy:
+    src: iptables-bootstrap
+    dest: /usr/local/sbin/iptables-bootstrap
+    owner: root
+    group: root
+    mode: 0700
+
+- name: enable iptables
+  tags:
+    - install
+    - iptables
+  service:
+    name: iptables
+    enabled: yes
+
+- name: create iptables conf.d directory
+  tags:
+    - install
+    - iptables
+  file:
+    path: /etc/iptables.d/ 
+    owner: root
+    group: root
+    mode: 0700
+    state: directory

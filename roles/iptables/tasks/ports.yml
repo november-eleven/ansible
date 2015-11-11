@@ -1,0 +1,11 @@
+---
+- name: write ports configuration
+  tags:
+    - install
+    - iptables
+    - update
+  template:
+    src: ports.conf.j2
+    dest: /etc/iptables.d/ports.conf
+  notify:
+    - restart iptables

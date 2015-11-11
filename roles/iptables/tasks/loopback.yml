@@ -1,0 +1,11 @@
+---
+- name: write loopback configuration
+  tags:
+    - install
+    - iptables
+    - update
+  template:
+    src: loopback.conf.j2
+    dest: /etc/iptables.d/loopback.conf
+  notify:
+    - restart iptables

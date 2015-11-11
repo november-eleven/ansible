@@ -1,0 +1,11 @@
+---
+- name: write ping configuration
+  tags:
+    - install
+    - iptables
+    - update
+  template:
+    src: ping.conf.j2
+    dest: /etc/iptables.d/ping.conf
+  notify:
+    - restart iptables

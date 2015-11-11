@@ -1,0 +1,46 @@
+#!/bin/sh
+
+do_start () {
+
+    /sbin/iptables -F
+    /sbin/iptables -X
+    /sbin/iptables -t nat -F
+    /sbin/iptables -t nat -X
+    /sbin/iptables -t mangle -F
+    /sbin/iptables -t mangle -X
+    /sbin/iptables -P INPUT DROP
+    /sbin/iptables -P FORWARD DROP
+    /sbin/iptables -P OUTPUT DROP
+
+    for conf in /etc/iptables.d/*.conf; do
+        if [ -f $conf ]; then
+            sh $conf > /dev/null
+        fi
+    done
+}
+
+do_stop () {
+    /sbin/iptables -F
+    /sbin/iptables -X
+    /sbin/iptables -t nat -F
+    /sbin/iptables -t nat -X
+    /sbin/iptables -t mangle -F
+    /sbin/iptables -t mangle -X
+    /sbin/iptables -P INPUT ACCEPT
+    /sbin/iptables -P FORWARD ACCEPT
+    /sbin/iptables -P OUTPUT ACCEPT
+}
+
+case "$1" in
+    --start)
+        do_start
+    ;;
+    --stop)
+        do_stop
+    ;;
+    *)
+        echo "Usage: /etc/init.d/iptables [--start|--stop]" >&2
+        exit 255
+    ;;
+esac
+exit 0

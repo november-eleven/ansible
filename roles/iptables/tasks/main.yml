@@ -1,0 +1,7 @@
+---
+- include: service.yml
+- include: alive.yml
+- include: ping.yml
+- include: loopback.yml
+- include: ports.yml
+  when: iptables_ports is defined

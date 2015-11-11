@@ -1,0 +1,16 @@
+[Unit]
+Description=Iptables Bootstrap
+After=network.target
+ConditionFileIsExecutable=/sbin/iptables
+ConditionFileIsExecutable=/sbin/ip6tables
+ConditionFileIsExecutable=/usr/local/sbin/iptables-bootstrap
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/sbin/iptables-bootstrap --start
+ExecStop=/usr/local/sbin/iptables-bootstrap --stop
+
+[Install]
+WantedBy=multi-user.target
+Alias=firewall.service
