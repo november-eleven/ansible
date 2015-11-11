@@ -21,8 +21,11 @@
     - mlocate
     - rsync
     - htop
+    - aptitude
     - openssh-server
     - openssh-client
+    - openssh-blacklist
+    - openssh-blacklist-extra
     - openssl
     - python2.7
 
