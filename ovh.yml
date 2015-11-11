@@ -6,7 +6,7 @@
   vars:
     iptables_default_iface: eth0
     iptables_ports:
-      - { port: 22, protocol: tcp, interface: eth0 }   # ssh
-      - { port: 80, protocol: tcp, interface: eth0 }   # http
-      - { port: 443, protocol: tcp, interface: eth0 }  # https
-      - { port: 123, protocol: udp, interface: eth0 }  # ntp
+      - { port: "22", protocol: "tcp", interface: "eth0" }   # ssh
+      - { port: "80", protocol: "tcp", interface: "eth0" }   # http
+      - { port: "443", protocol: "tcp", interface: "eth0" }  # https
+      - { port: "123", protocol: "udp", interface: "eth0" }  # ntp
