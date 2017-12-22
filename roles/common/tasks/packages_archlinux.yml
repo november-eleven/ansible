@@ -40,3 +40,4 @@
     - btrfs-progs
     - jfsutils
     - reiserfsprogs
+    - vim
